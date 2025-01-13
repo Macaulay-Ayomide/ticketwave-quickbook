@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import PaystackPop from "@paystack/inline-js";
 
 const BookingPage = () => {
   const { id } = useParams();
@@ -23,13 +24,35 @@ const BookingPage = () => {
     3: { title: "Food & Wine Expo", price: 79 },
   }[id as string];
 
+  const handlePayment = () => {
+    const paystack = new PaystackPop();
+    paystack.newTransaction({
+      key: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // Replace with your public key
+      email: formData.email,
+      amount: event.price * formData.quantity * 100, // Amount in kobo
+      currency: 'NGN',
+      ref: '' + Math.floor((Math.random() * 1000000000) + 1),
+      onSuccess: (transaction: any) => {
+        toast({
+          title: "Payment Successful",
+          description: `Transaction Reference: ${transaction.reference}`,
+        });
+        // Here you would typically save the booking to your database
+        navigate('/');
+      },
+      onCancel: () => {
+        toast({
+          title: "Payment Cancelled",
+          description: "You have cancelled the payment",
+          variant: "destructive",
+        });
+      },
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Integrate with Paystack and backend
-    toast({
-      title: "Booking Initiated",
-      description: "Payment processing will be integrated soon.",
-    });
+    handlePayment();
   };
 
   if (!event) {
@@ -94,7 +117,7 @@ const BookingPage = () => {
               </div>
             </div>
             <Button type="submit" className="w-full">
-              Proceed to Payment
+              Pay Now
             </Button>
           </form>
         </CardContent>
