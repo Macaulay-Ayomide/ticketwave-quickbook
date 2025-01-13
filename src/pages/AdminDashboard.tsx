@@ -12,14 +12,22 @@ import { useToast } from "@/components/ui/use-toast";
 
 const AdminDashboard = () => {
   const { toast } = useToast();
-  const [tickets] = useState([
+  const [ticketOwners] = useState([
     {
       id: 1,
-      event: "Tech Conference 2024",
-      customerName: "John Doe",
-      email: "john@example.com",
-      quantity: 2,
-      status: "Paid",
+      businessName: "Tech Events Ltd",
+      ownerName: "John Doe",
+      email: "john@techevents.com",
+      totalEvents: 3,
+      status: "Active",
+    },
+    {
+      id: 2,
+      businessName: "Concert Masters",
+      ownerName: "Jane Smith",
+      email: "jane@concertmasters.com",
+      totalEvents: 5,
+      status: "Active",
     },
     // Add more mock data as needed
   ]);
@@ -35,7 +43,7 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">Ticket Management</h1>
+          <h1 className="text-2xl font-bold">Ticket Owners Management</h1>
           <Button onClick={() => window.location.href = "/"}>
             Back to Home
           </Button>
@@ -45,27 +53,33 @@ const AdminDashboard = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Event</TableHead>
-                <TableHead>Customer</TableHead>
+                <TableHead>Business Name</TableHead>
+                <TableHead>Owner Name</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Quantity</TableHead>
+                <TableHead>Total Events</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {tickets.map((ticket) => (
-                <TableRow key={ticket.id}>
-                  <TableCell>{ticket.event}</TableCell>
-                  <TableCell>{ticket.customerName}</TableCell>
-                  <TableCell>{ticket.email}</TableCell>
-                  <TableCell>{ticket.quantity}</TableCell>
-                  <TableCell>{ticket.status}</TableCell>
+              {ticketOwners.map((owner) => (
+                <TableRow key={owner.id}>
+                  <TableCell>{owner.businessName}</TableCell>
+                  <TableCell>{owner.ownerName}</TableCell>
+                  <TableCell>{owner.email}</TableCell>
+                  <TableCell>{owner.totalEvents}</TableCell>
+                  <TableCell>
+                    <span className={`px-2 py-1 rounded-full text-sm ${
+                      owner.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {owner.status}
+                    </span>
+                  </TableCell>
                   <TableCell>
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={() => handleDelete(ticket.id)}
+                      onClick={() => handleDelete(owner.id)}
                     >
                       Delete
                     </Button>
